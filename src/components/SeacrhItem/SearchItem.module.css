@@ -1,0 +1,44 @@
+.Search-Item__wrapper {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  min-width: 200px;
+  font-size: 14px;
+  color: white;
+  font-family: "Inter", sans-serif;
+  width: 80%;
+  margin: 0 auto;
+  cursor: pointer;
+}
+
+.Search-Item__item {
+  display: flex;
+  background: #0c495a33;
+  border: 1px solid white;
+  width: 70%;
+  gap: 30px;
+}
+
+.Search-Item__img {
+  width: 70px;
+  height: 70px;
+}
+.Search-Item__img img {
+  width: 100%;
+  height: 100%;
+}
+.Search-Item__info {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: space-evenly;
+}
+.Search-Item__info-name {
+  font-size: 22px;
+  font-weight: bold;
+}
+.Search-Item__info-type {
+  font-size: 13px;
+}
+.Search-Item__info-rating {
+  font-size: 12px;
+}

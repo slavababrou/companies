@@ -1,0 +1,41 @@
+header {
+  padding: 10px 80px;
+  display: flex;
+  justify-content: space-between;
+  height: 70px;
+}
+
+.logo {
+  width: 45px;
+  height: auto;
+  cursor: pointer;
+}
+nav {
+  display: flex;
+  align-items: center;
+}
+ul {
+  display: flex;
+  justify-content: stretch;
+  list-style: none;
+}
+
+li {
+  padding: 0 20px;
+}
+
+ul a {
+  cursor: pointer;
+  padding: 10px 15px;
+  color: white;
+  font-size: 1.1rem;
+  font-family: "Inter", sans-serif;
+  border: 1px solid white;
+}
+a:hover {
+  text-decoration: underline;
+}
+.active {
+  background-color: #fbb2215d;
+  border-radius: 6px;
+}

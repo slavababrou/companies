@@ -1,0 +1,11 @@
+.wrapper button {
+  padding: 8px 16px;
+  text-decoration: none;
+  color: #494949;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.selected {
+  background: rgba(253, 209, 127, 0.433);
+}

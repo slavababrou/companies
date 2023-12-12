@@ -1,0 +1,105 @@
+.wrapper {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  overflow: hidden;
+  overflow-y: auto;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center; /* см. ниже */
+  align-items: center;
+  z-index: 99;
+  cursor: initial;
+  background: rgba(0, 37, 37, 0.25);
+}
+.window {
+  box-shadow: 0 0 10px 2px grey;
+  border-radius: 10px;
+  font-family: "Inter", sans-serif;
+  padding: 30px;
+  background: #fff;
+  width: 600px;
+  max-width: 100%;
+  overflow: visible;
+  transition: transform 0.2s ease 0s, opacity 0.2s ease 0s;
+  transform: scale(0.9);
+  /* opacity: 0; */
+}
+
+.hystmodal--active {
+  visibility: visible;
+}
+.hystmodal--active .hystmodal__window {
+  transform: scale(1);
+  opacity: 1;
+}
+
+.wrapper h3 {
+  text-align: center;
+  font-size: 22px;
+  color: black;
+  margin-bottom: 40px;
+}
+.window__head-wrapper {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+}
+
+.btn_close-modal {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  width: 25px;
+  height: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  border: 1px solid rgb(101, 130, 255);
+}
+.btn_close-modal::before,
+.btn_close-modal::after {
+  content: "";
+  position: absolute;
+  height: 1px;
+  width: 16px;
+  background-color: #1a36d0;
+}
+
+.btn_close-modal::before {
+  transform: rotate(45deg);
+}
+
+.btn_close-modal::after {
+  transform: rotate(-45deg);
+}
+
+/* Подсветка при наведении */
+.btn_close-modal:hover {
+  background-color: #ffcccc; /* слабая подсветка красным */
+}
+
+.info {
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 30px;
+  margin: 20px 0 60px 0;
+}
+.btn {
+  width: 60%;
+  color: rgb(255, 255, 255);
+  background: rgba(0, 0, 255, 0.766);
+}
+.btnWrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.info input {
+  color: black;
+  border-bottom: 1px solid #999;
+}

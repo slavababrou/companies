@@ -1,0 +1,11 @@
+.content__search {
+  height: 100vh;
+  background: url("../../images/header_background.jpg");
+  display: flex;
+  flex-flow: column nowrap;
+}
+
+.content__search_wrapper {
+  flex: 1 0 auto;
+  padding: 120px 0 0 0;
+}

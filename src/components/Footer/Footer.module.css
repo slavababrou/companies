@@ -1,0 +1,57 @@
+.wrapper {
+  background: #000;
+  height: 200px;
+}
+
+.container {
+  display: flex;
+  height: 100%;
+  flex-flow: column nowrap;
+  justify-content: space-between;
+  align-items: space-between;
+}
+
+.up {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  color: white;
+  font-size: 16px;
+  font-family: "Inter", sans-serif;
+  height: 60px;
+  border-bottom: 1px solid white;
+}
+.up ul {
+  gap: 40px;
+}
+.up li {
+  text-transform: uppercase;
+  cursor: pointer;
+  padding: 0;
+}
+
+.down {
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  padding: 35px 0;
+}
+.down_icons {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  justify-content: center;
+}
+
+.down .icons {
+  height: 25px;
+  cursor: pointer;
+}
+
+.text {
+  color: #979797;
+  font-size: 18px;
+  font-family: "Inter", sans-serif;
+}
