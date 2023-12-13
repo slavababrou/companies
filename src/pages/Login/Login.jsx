@@ -5,32 +5,15 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { login } from "../../store/authSlice";
 import axios from "axios";
+import { loginUser } from "../../store/authSlice";
 
 const Login = (props) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const handleLogin = async (formData) => {
-    try {
-      const response = await axios.post(
-        "http://localhost:3192/api/user/login",
-        formData
-      );
-
-      const username = response.data.user.login;
-      const token = response.data.token;
-
-      console.log("Успешный ответ. Логин:", username);
-
-      dispatch(login({ username: username }));
-      localStorage.setItem("token", token);
-      navigate("/");
-    } catch (error) {
-      console.error(
-        "Ошибка:",
-        error.response ? error.response.data : error.message
-      );
-    }
+  const handleLogin = (formData) => {
+    dispatch(loginUser(formData));
+    navigate("/");
   };
 
   const submitHandler = (e) => {

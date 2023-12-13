@@ -1,21 +1,30 @@
+import React, { useState } from "react";
+import { Link, useMatch, useResolvedPath } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { logout, selectIsAuthenticated } from "../../store/authSlice";
 import image from "../../images/logo/logo.svg";
 import styles from "./Header.module.css";
-import { Link, useMatch, useResolvedPath } from "react-router-dom";
-import { useSelector } from "react-redux";
 
 const Header = () => {
-  const username = useSelector((state) => state.auth.user?.username);
+  const dispatch = useDispatch();
+  const username = useSelector((state) => state.auth.user?.user?.login);
+  const isAuthenticated = useSelector(selectIsAuthenticated);
+
+  const [isMenuVisible, setMenuVisible] = useState(false);
+
+  const handleLogout = (e) => {
+    e.stopPropagation();
+    dispatch(logout());
+  };
+
+  const handleMenuToggle = () => {
+    setMenuVisible(!isMenuVisible);
+  };
 
   const navs = [
-    {
-      href: "/authorization",
-      name: "Регистрация",
-    },
-    {
-      href: "/catalog",
-      name: username,
-    },
-  ];
+    !isAuthenticated && { href: "/authorization", name: "Регистрация" },
+    isAuthenticated && { href: "/profile", name: "Профиль" },
+  ].filter(Boolean);
 
   return (
     <header>
@@ -28,15 +37,40 @@ const Header = () => {
       <nav>
         <ul>
           {navs.map((nav) => (
-            <CustomLink to={nav.href}>{nav.name}</CustomLink>
+            <CustomLink to={nav.href} key={nav.href}>
+              {nav.name}
+            </CustomLink>
           ))}
+
+          {/* {isAuthenticated && (
+            <li>
+              <div
+                className={styles.profileMenu}
+                onClick={handleMenuToggle}
+                onBlur={() => setMenuVisible(false)}
+                tabIndex={0}
+              >
+                Профиль
+                {isMenuVisible && (
+                  <ul className={styles.dropdownMenu}>
+                    <li>
+                      <Link to='/profile'>Мой профиль</Link>
+                    </li>
+                    <li>
+                      <button onClick={handleLogout}>Выйти</button>
+                    </li>
+                  </ul>
+                )}
+              </div>
+            </li>
+          )} */}
         </ul>
       </nav>
     </header>
   );
 };
 
-function CustomLink({ to, children, ...props }) {
+const CustomLink = ({ to, children, ...props }) => {
   const resolvedPath = useResolvedPath(to);
   const isActive = useMatch({ path: resolvedPath.pathname, end: true });
   return (
@@ -46,6 +80,6 @@ function CustomLink({ to, children, ...props }) {
       </Link>
     </li>
   );
-}
+};
 
 export default Header;

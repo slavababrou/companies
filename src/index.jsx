@@ -8,6 +8,7 @@ import Company from "./pages/Company/Company";
 import { Provider } from "react-redux";
 import store from "./store/store";
 import PrivateRoute from "./private/PrivateRoute/PrivateRoute";
+import Profile from "./pages/Profile/Profile";
 
 const router = createBrowserRouter([
   {
@@ -16,7 +17,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/catalog",
-    element: <Catalog />,
+    element: <PrivateRoute element={<Catalog />} />,
   },
   {
     path: "/authorization",
@@ -24,7 +25,11 @@ const router = createBrowserRouter([
   },
   {
     path: "/company/:companyId",
-    element: <Company />,
+    element: <PrivateRoute element={<Company />} />,
+  },
+  {
+    path: "/profile",
+    element: <PrivateRoute element={<Profile />} />,
   },
 ]);
 ReactDOM.createRoot(document.getElementById("root")).render(
