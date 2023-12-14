@@ -95,13 +95,12 @@ const RegistrationForm = (props) => {
       <div>
         <span className={styles["enter_span"]}>
           Уже есть аккаунт?
-          <Link
+          <button
             className={styles["enter_link"]}
-            to='/authorization'
             onClick={props.authToggleHandler}
           >
             Войти
-          </Link>
+          </button>
         </span>
       </div>
     </div>

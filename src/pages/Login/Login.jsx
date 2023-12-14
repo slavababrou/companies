@@ -3,8 +3,6 @@ import Input from "../../components/Input/Input";
 import styles from "./Login.module.css";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { login } from "../../store/authSlice";
-import axios from "axios";
 import { loginUser } from "../../store/authSlice";
 
 const Login = (props) => {
@@ -54,7 +52,12 @@ const Login = (props) => {
       <div className={styles["links"]}>
         <span>Нет аккаунта?</span>
         <div>
-          <a onClick={props.authToggleHandler}>Регистрация</a>
+          <button
+            className={styles["enter_link"]}
+            onClick={props.authToggleHandler}
+          >
+            Регистрация
+          </button>
         </div>
       </div>
     </div>

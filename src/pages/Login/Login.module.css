@@ -59,3 +59,14 @@
 .links a:hover {
   text-decoration: none;
 }
+.enter_link {
+  margin-left: 10px;
+  margin-top: -5px;
+  color: rgba(255, 255, 255, 0.974);
+  border-bottom: 1px solid #a0ffecc5;
+  padding-bottom: 1px;
+  cursor: pointer;
+}
+.enter_link:hover {
+  text-decoration: none;
+}

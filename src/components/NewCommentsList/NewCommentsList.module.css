@@ -30,6 +30,7 @@
   display: flex;
   flex-flow: column nowrap;
   gap: 20px;
+  justify-content: space-between;
 }
 .list .item .wrapper {
   display: flex;
@@ -40,10 +41,12 @@
 .list .item .wrapper .subInfo {
   display: flex;
   flex-flow: column nowrap;
+  justify-content: space-between;
   width: 100%;
+  gap: 5px;
 }
 .company {
-  font-size: 24px;
+  font-size: 18px;
   font-weight: bold;
 }
 .company::first-letter {
