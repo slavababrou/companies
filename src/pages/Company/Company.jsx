@@ -108,28 +108,30 @@ const Company = () => {
 
             <div className={styles["wrapper__container"]}>
               <div className={styles["comments__container"]}>
-                <h3>Новые отзывы</h3>
+                <h3>
+                  {revievsData?.rows?.length > 0
+                    ? "Новые отзывы"
+                    : "Нет отзывов"}
+                </h3>
                 <div className={styles["comments__list"]}>
                   {revievsData?.rows?.map((reviev) => {
                     const user = selectUserById(users, reviev.userId);
                     return (
-                      <>
-                        <div key={reviev.id} className={styles["list_item"]}>
-                          <div className={styles["list_item_logo-wrapper"]}>
-                            <img src={userLogo} alt='logo' />
-                            <TimeAgo date={reviev.date} />
-                          </div>
-
-                          <div className={styles["list_item_info"]}>
-                            <h5> {reviev.term}</h5>
-                            <span>Оценка: {reviev.raiting}</span>
-                            <span>{user?.login}</span>
-                          </div>
-                          <span className={styles["list_item_text"]}>
-                            {reviev.text}
-                          </span>
+                      <div key={reviev.id} className={styles["list_item"]}>
+                        <div className={styles["list_item_logo-wrapper"]}>
+                          <img src={userLogo} alt='logo' />
+                          <TimeAgo date={reviev.date} />
                         </div>
-                      </>
+
+                        <div className={styles["list_item_info"]}>
+                          <h5> {reviev.term}</h5>
+                          <span>Оценка: {reviev.raiting}</span>
+                          <span>{user?.login}</span>
+                        </div>
+                        <span className={styles["list_item_text"]}>
+                          {reviev.text}
+                        </span>
+                      </div>
                     );
                   })}
                 </div>
