@@ -27,7 +27,9 @@ function Search({ placeholder, className, inputClassName, ...props }) {
     if (searchText.trim())
       setSearchResults(
         companies.filter((company) => {
-          return company.name.toLowerCase().includes(searchText.toLowerCase());
+          return company.name
+            .toLowerCase()
+            .startsWith(searchText.toLowerCase());
         })
       );
     else {
@@ -57,7 +59,7 @@ function Search({ placeholder, className, inputClassName, ...props }) {
         {searchResults.map((company) => {
           const linkTo = `/company/${company.id}`;
           return (
-            <Link to={linkTo}>
+            <Link key={company.id} to={linkTo}>
               <SearchItem company={company} />
             </Link>
           );

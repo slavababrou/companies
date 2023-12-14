@@ -26,6 +26,7 @@
   background: white;
   padding: 20px;
   width: 31%;
+  min-width: 300px;
   height: 220px;
   display: flex;
   flex-flow: column nowrap;
@@ -56,9 +57,4 @@
 .container .list img {
   background: #000;
   width: 200px;
-}
-
-.date {
-  color: #6a6a6a;
-  font-size: 13px;
 }

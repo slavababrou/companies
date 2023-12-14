@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import {
   fetchCompanyData,
   fetchRevievsData,
+  fetchSameCompaniesData,
 } from "../../store/companySlice.js";
 import { openModal } from "../../store/modalSlice";
 
@@ -11,23 +12,26 @@ import Footer from "../../components/Footer/Footer";
 import Header from "../../components/Header/Header";
 import styles from "./Company.module.css";
 import logo from "../../images/logo/logo.svg";
-import user from "../../images/user.png";
+import userLogo from "../../images/user.png";
 import ModalReviev from "../../components/ModalReviev/ModalReviev";
 import Rating from "../../components/Raiting/Raiting";
 import Pagination from "../../components/Pagination/Pagination";
+import { selectUserById } from "../../store/userSlice.js";
+//import { selectRevievsDataFromStore } from "../../store/companySlice.js";
+import TimeAgo from "../../components/TimeAgo/TimeAgo.jsx";
 
 const Company = () => {
   const dispatch = useDispatch();
   const { companyId } = useParams();
   const isModalActive = useSelector((state) => state.modal.isModalActive);
-
-  // Используйте селекторы для получения данных из Redux store
+  const users = useSelector((state) => state.user.users);
   const companyData = useSelector((state) => state.company.companyData);
   const revievsData = useSelector((state) => state.company.revievsData);
+
   const sameCompaniesData = useSelector(
     (state) => state.company.sameCompaniesData
   );
-  const isLoading = useSelector((state) => state.company.isLoading);
+  //const isLoading = useSelector((state) => state.company.isLoading);
 
   let [list, setList] = useState(1);
 
@@ -36,8 +40,29 @@ const Company = () => {
   };
 
   useEffect(() => {
-    dispatch(fetchCompanyData(companyId));
-    dispatch(fetchRevievsData({ companyId, list }));
+    const fetchData = async () => {
+      try {
+        await dispatch(fetchCompanyData(companyId));
+        await dispatch(fetchSameCompaniesData());
+
+        const revievsDataAction = dispatch(
+          fetchRevievsData({ companyId, list })
+        );
+        await revievsDataAction.unwrap();
+
+        //const revievsData = selectRevievsDataFromStore();
+
+        // await Promise.all(
+        //   (revievsData?.rows || []).map(async (item) => {
+        //     await dispatch(fetchUserById(item.userId));
+        //   })
+        // );
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
   }, [companyId, list, dispatch]);
 
   return (
@@ -85,19 +110,28 @@ const Company = () => {
               <div className={styles["comments__container"]}>
                 <h3>Новые отзывы</h3>
                 <div className={styles["comments__list"]}>
-                  {revievsData?.rows?.map((reviev) => (
-                    <>
-                      <div key={reviev.id} className={styles["list_item"]}>
-                        <img src={user} alt='logo' />
-                        <div className={styles["list_item_info"]}>
-                          <h5>{reviev.term}</h5>
-                          <span>Оценка: {reviev.raiting}</span>
-                          <span>Татьяна {reviev.date}</span>
-                          <span>{reviev.text}</span>
+                  {revievsData?.rows?.map((reviev) => {
+                    const user = selectUserById(users, reviev.userId);
+                    return (
+                      <>
+                        <div key={reviev.id} className={styles["list_item"]}>
+                          <div className={styles["list_item_logo-wrapper"]}>
+                            <img src={userLogo} alt='logo' />
+                            <TimeAgo date={reviev.date} />
+                          </div>
+
+                          <div className={styles["list_item_info"]}>
+                            <h5> {reviev.term}</h5>
+                            <span>Оценка: {reviev.raiting}</span>
+                            <span>{user?.login}</span>
+                          </div>
+                          <span className={styles["list_item_text"]}>
+                            {reviev.text}
+                          </span>
                         </div>
-                      </div>
-                    </>
-                  ))}
+                      </>
+                    );
+                  })}
                 </div>
               </div>
               <div className={styles["bar__container"]}>
@@ -115,20 +149,27 @@ const Company = () => {
                   <h4>
                     {companyData?.type}{" "}
                     <b className={styles["bar_revievs-count"]}>
-                      ({sameCompaniesData?.count || 0})
+                      ({sameCompaniesData?.length || 0})
                     </b>
                   </h4>
                   <div className={styles["list"]}>
-                    {sameCompaniesData?.map((company) => (
-                      <div className={styles["list_item"]}>
-                        <img src={logo} alt='logo' />
-                        <div className={styles["list_item_info"]}>
-                          <h5>{company?.name}</h5>
-                          <span>Рейтинг: {company?.raiting}</span>
-                          {/* <span>{revievsData.count} отзывов</span> */}
-                        </div>
-                      </div>
-                    )) && (
+                    {sameCompaniesData?.map((company) => {
+                      const linkTo = `/company/${company.id}`;
+                      return (
+                        <Link
+                          to={linkTo}
+                          key={company.id}
+                          className={styles["list_item"]}
+                        >
+                          <img src={logo} alt='logo' />
+                          <div className={styles["list_item_info"]}>
+                            <h5>{company?.name}</h5>
+                            <span>Рейтинг: {company?.raiting}</span>
+                          </div>
+                        </Link>
+                      );
+                    })}
+                    {sameCompaniesData?.length === 0 && (
                       <span className={styles["list_no-such-companies"]}>
                         Нет компаний такого типа
                       </span>

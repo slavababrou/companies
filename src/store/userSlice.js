@@ -6,18 +6,18 @@ export const fetchUserById = createAsyncThunk(
   "user/fetchUserById",
   async (userId, { getState }) => {
     try {
-      //const token = getState().auth.user?.token;
-      //   if (!token) {
-      //     throw new Error("Токен недоступен");
-      //   }
+      const token = getState().auth.user?.token;
+      if (!token) {
+        throw new Error("Токен недоступен");
+      }
 
       const response = await axios.get(
-        `http://localhost:3192/api/user/${userId}`
-        // {
-        //   headers: {
-        //     Authorization: `Bearer ${token}`,
-        //   },
-        // }
+        `http://localhost:3192/api/user/${userId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       return response.data;
     } catch (error) {

@@ -12,18 +12,34 @@ const TimeAgo = ({ date }) => {
       const seconds = Math.floor(timeDifference / 1000);
 
       if (seconds < 60) {
-        setTimeAgo("несколько секунд назад");
+        setTimeAgo("только-что");
       } else if (seconds < 3600) {
         const minutes = Math.floor(seconds / 60);
         setTimeAgo(
-          `${minutes} ${declOfNum(minutes, ["минуту", "минуты", "минут"])}`
+          `${minutes} ${declOfNum(minutes, [
+            "минуту назад",
+            "минуты назад",
+            "минут назад",
+          ])}`
         );
       } else if (seconds < 86400) {
         const hours = Math.floor(seconds / 3600);
-        setTimeAgo(`${hours} ${declOfNum(hours, ["час", "часа", "часов"])}`);
+        setTimeAgo(
+          `${hours} ${declOfNum(hours, [
+            "час назад",
+            "часа назад",
+            "часов назад",
+          ])}`
+        );
       } else {
         const days = Math.floor(seconds / 86400);
-        setTimeAgo(`${days} ${declOfNum(days, ["день", "дня", "дней"])}`);
+        setTimeAgo(
+          `${days} ${declOfNum(days, [
+            "день назад",
+            "дня назад",
+            "дней назад",
+          ])}`
+        );
       }
     };
 
@@ -39,7 +55,7 @@ const TimeAgo = ({ date }) => {
     ];
   };
 
-  return <>{timeAgo}</>;
+  return <span style={{ fontSize: 12, color: "#6a6a6a" }}>{timeAgo} </span>;
 };
 
 export default TimeAgo;
