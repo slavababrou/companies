@@ -80,21 +80,6 @@
   gap: 30px;
 }
 
-.comments__list .list_item {
-  padding: 16px;
-  box-shadow: 0 0 3px 1px #777;
-  border-radius: 5px;
-  padding: 10px;
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  height: 160px;
-}
-
-.comments__list .list_item img {
-  height: 100px;
-}
-
 .bar__container {
   display: flex;
   flex-direction: column;
@@ -139,19 +124,6 @@
   background: #000;
   width: 70px;
 }
-.list_item_info {
-  display: flex;
-  flex-direction: column;
-  font-size: 12px;
-  gap: 10px;
-  align-self: baseline;
-  padding: 20px;
-}
-
-.list_item_info h5 {
-  font-size: 14px;
-  margin-bottom: 4px;
-}
 .pagination {
   display: flex;
   justify-content: center;
@@ -166,20 +138,4 @@
 .bar_revievs-count {
   font-weight: 300;
   font-size: 12px;
-}
-
-.list_item_logo-wrapper {
-  display: flex;
-  flex-flow: column nowrap;
-  justify-content: space-between;
-  height: 90%;
-  align-items: center;
-}
-
-.list_item_text {
-  font-size: 14px;
-  align-self: baseline;
-  padding: 20px;
-  color: #555555;
-  display: "inline-block";
 }

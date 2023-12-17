@@ -31,3 +31,9 @@
 .icon {
   width: 22px;
 }
+.seacrh-items__wrappeer {
+  display: flex;
+  flex-flow: column nowrap;
+  overflow-y: auto;
+  max-height: 200px;
+}

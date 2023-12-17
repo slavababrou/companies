@@ -6,18 +6,15 @@ import {
   fetchRevievsData,
   fetchSameCompaniesData,
 } from "../../store/companySlice.js";
+import logo from "../../images/logo/logo.svg";
 import { openModal } from "../../store/modalSlice";
-
 import Footer from "../../components/Footer/Footer";
 import Header from "../../components/Header/Header";
 import styles from "./Company.module.css";
-import logo from "../../images/logo/logo.svg";
-import userLogo from "../../images/user.png";
 import ModalReviev from "../../components/ModalReviev/ModalReviev";
 import Pagination from "../../components/Pagination/Pagination";
 import { selectUserById } from "../../store/userSlice.js";
-//import { selectRevievsDataFromStore } from "../../store/companySlice.js";
-import TimeAgo from "../../components/TimeAgo/TimeAgo.jsx";
+import CompanyRevievItem from "../../components/CompanyRevievItem/CompanyRevievItem";
 
 const Company = () => {
   const dispatch = useDispatch();
@@ -79,16 +76,6 @@ const Company = () => {
                   <span>{companyData?.raiting || 0}</span>
                 </div>
               </div>
-              {/* <div className={styles["comments"]}>
-                <span className={styles["comments_raiting"]}>
-                  rating:
-                  {companyData?.raiting || 0}
-                </span>
-                <span className={styles["comments_count"]}>
-                  revievs:
-                  {revievsData?.count}
-                </span>
-              </div> */}
             </div>
             <div className={styles["wrapper__toggle"]}>
               <span className={styles["toggle_comments"]}>
@@ -110,21 +97,11 @@ const Company = () => {
                   {revievsData?.rows?.map((reviev) => {
                     const user = selectUserById(users, reviev.userId);
                     return (
-                      <div key={reviev.id} className={styles["list_item"]}>
-                        <div className={styles["list_item_logo-wrapper"]}>
-                          <img src={userLogo} alt='logo' />
-                          <TimeAgo date={reviev.date} />
-                        </div>
-
-                        <div className={styles["list_item_info"]}>
-                          <h5> {reviev.term}</h5>
-                          <span>Оценка: {reviev.raiting}</span>
-                          <span>{user?.login}</span>
-                        </div>
-                        <span className={styles["list_item_text"]}>
-                          {reviev.text}
-                        </span>
-                      </div>
+                      <CompanyRevievItem
+                        key={reviev.id}
+                        reviev={reviev}
+                        user={user}
+                      />
                     );
                   })}
                 </div>

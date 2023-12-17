@@ -1,7 +1,7 @@
+import React, { useState, useEffect, useRef } from "react";
 import styles from "./Search.module.css";
 import cn from "classnames";
 import image from "../../images/search.svg";
-import { useState, useEffect } from "react";
 import SearchItem from "../SeacrhItem/SearchItem";
 import axios from "axios";
 import { Link } from "react-router-dom";
@@ -10,6 +10,9 @@ function Search({ placeholder, className, inputClassName, ...props }) {
   const [searchText, setSearchText] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [companies, setCompanies] = useState([]);
+  const [isSearchResultsVisible, setIsSearchResultsVisible] = useState(false);
+
+  const searchContainerRef = useRef(null);
 
   const handleSearch = async () => {
     try {
@@ -19,62 +22,72 @@ function Search({ placeholder, className, inputClassName, ...props }) {
       console.error("Error fetching data:", error);
     }
   };
-  // useEffect(() => {
-  //   handleSearch();
-  // }, []);
 
   useEffect(() => {
-    if (searchText.trim())
+    if (searchText.trim()) {
       setSearchResults(
-        companies.filter((company) => {
-          return company.name
-            .toLowerCase()
-            .startsWith(searchText.toLowerCase());
-        })
+        companies.filter((company) =>
+          company.name.toLowerCase().startsWith(searchText.toLowerCase())
+        )
       );
-    else {
+      setIsSearchResultsVisible(true);
+    } else {
       setSearchResults([]);
+      //setIsSearchResultsVisible(false);
     }
-  }, [searchText]);
+  }, [searchText, companies]);
+
+  useEffect(() => {
+    document.addEventListener("click", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
+
+  const handleClickOutside = (event) => {
+    if (
+      searchContainerRef.current &&
+      !searchContainerRef.current.contains(event.target)
+    ) {
+      setIsSearchResultsVisible(false);
+    }
+  };
 
   return (
     <>
-      <div className={cn(styles.wrapper, className)}>
+      <div className={cn(styles.wrapper, className)} ref={searchContainerRef}>
         <input
           value={searchText}
-          onChange={(e) => {
-            e.preventDefault();
-            setSearchText(e.target.value);
+          onChange={(e) => setSearchText(e.target.value)}
+          onFocus={() => {
+            setIsSearchResultsVisible(true);
+            handleSearch();
           }}
-          onFocus={handleSearch}
           className={cn(styles.search, inputClassName)}
           placeholder={placeholder}
           {...props}
           type='text'
-        ></input>
-        <div className={styles[`icon-wrapper`]} onClick={handleSearch}>
-          <img src={image} className={styles.icon} alt='search'></img>
+        />
+        <div className={styles[`icon-wrapper`]}>
+          <img src={image} className={styles.icon} alt='search' />
         </div>
       </div>
-      <div className={styles["seacrh-items__wrappeer"]}>
-        {searchText
-          ? searchResults.slice(0, 3).map((company) => {
-              const linkTo = `/company/${company.id}`;
-              return (
-                <Link key={company.id} to={linkTo}>
+      {isSearchResultsVisible && (
+        <div className={styles["seacrh-items__wrappeer"]}>
+          {searchText
+            ? searchResults.slice(0, 3).map((company) => (
+                <Link key={company.id} to={`/company/${company.id}`}>
                   <SearchItem company={company} />
                 </Link>
-              );
-            })
-          : companies.slice(0, 3).map((company) => {
-              const linkTo = `/company/${company.id}`;
-              return (
-                <Link key={company.id} to={linkTo}>
+              ))
+            : companies.slice(0, 3).map((company) => (
+                <Link key={company.id} to={`/company/${company.id}`}>
                   <SearchItem company={company} />
                 </Link>
-              );
-            })}
-      </div>
+              ))}
+        </div>
+      )}
     </>
   );
 }
