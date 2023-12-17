@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { logout, updateUser, changePassword } from "../../store/authSlice";
 import { useNavigate } from "react-router-dom";
+import ModalCompany from "../../components/ModalCompany/ModalCompany";
 import Header from "../../components/Header/Header";
 import styles from "./Profile.module.css";
 
@@ -12,6 +13,15 @@ const Profile = () => {
 
   const [isEditing, setIsEditing] = useState(false);
   const [isChangingPassword, setIsChangingPassword] = useState(false);
+
+  const [isCompanyModalOpen, setIsCompanyModalOpen] = useState(false);
+  const openCompanyModal = () => {
+    setIsCompanyModalOpen(true);
+  };
+
+  const closeCompanyModal = () => {
+    setIsCompanyModalOpen(false);
+  };
 
   const [editedUserData, setEditedUserData] = useState({
     login: user?.login,
@@ -239,13 +249,16 @@ const Profile = () => {
           )}
 
           {getRoleName(user?.roleId) === "Manager" && (
-            <button className={styles.btn}>Добавить компанию</button>
+            <button className={styles.btn} onClick={() => openCompanyModal()}>
+              Добавить компанию
+            </button>
           )}
           <button className={styles.btn} onClick={handleLogout}>
             Выйти
           </button>
         </div>
       </div>
+      <ModalCompany isOpen={isCompanyModalOpen} onClose={closeCompanyModal} />
     </div>
   );
 };

@@ -31,6 +31,21 @@ export const deleteRequest = createAsyncThunk(
     }
   }
 );
+export const addRequest = createAsyncThunk(
+  "requests/addCompanyRequest",
+  async ({ type, userId, companyInfo }) => {
+    try {
+      const response = await axios.post("http://localhost:3192/api/requests", {
+        type,
+        userId,
+        companyInfo,
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+);
 
 const initialState = {
   companyRequests: [],

@@ -3,17 +3,16 @@ import Input from "../../components/Input/Input";
 import styles from "./RegistrationForm.module.css";
 import axios from "axios";
 import { validateLogin, validateEmail, validatePassword } from "./validation";
-import { Link } from "react-router-dom";
 
 const RegistrationForm = (props) => {
   const register = async (formData) => {
     try {
       await axios.post("http://localhost:3192/api/user/register", formData);
-      console.log("User created");
+      alert("Акканут успешно создан!");
       props.authToggleHandler();
       return 0;
     } catch (error) {
-      console.error("Error creating user:", error.message);
+      alert("Error creating user:", error.message);
       return 1;
     }
   };
