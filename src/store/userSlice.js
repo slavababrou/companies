@@ -1,7 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-// Создаем асинхронное действие (thunk) для получения пользователя по ID
 export const fetchUserById = createAsyncThunk(
   "user/fetchUserById",
   async (userId, { getState }) => {
@@ -26,13 +25,24 @@ export const fetchUserById = createAsyncThunk(
   }
 );
 
-// Создаем асинхронное действие (thunk) для получения массива пользователей по массиву ID
 export const fetchUsersByIds = createAsyncThunk(
   "user/fetchUsersByIds",
   async (userIds) => {
     try {
       const response = await axios.get("http://localhost:3192/api/user");
       return response.data.filter((item) => userIds.includes(item.id));
+    } catch (error) {
+      throw error;
+    }
+  }
+);
+
+export const deleteUser = createAsyncThunk(
+  "requests/deleteUser",
+  async (userId) => {
+    try {
+      await axios.delete(`http://localhost:3192/api/user/${userId}`);
+      return userId;
     } catch (error) {
       throw error;
     }
@@ -69,11 +79,13 @@ const userSlice = createSlice({
       })
       .addCase(fetchUsersByIds.rejected, (state) => {
         state.isLoading = false;
+      })
+      .addCase(deleteUser.fulfilled, (state, action) => {
+        delete state.users[action.payload];
       });
   },
 });
 
-// Selector to get a user by ID
 export const selectUserById = (state, userId) => {
   return state[userId];
 };

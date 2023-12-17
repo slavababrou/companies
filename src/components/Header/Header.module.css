@@ -32,7 +32,3 @@ ul a {
   font-family: "Inter", sans-serif;
   border: 1px solid white;
 }
-.active {
-  background-color: #fbb2215d;
-  border-radius: 6px;
-}

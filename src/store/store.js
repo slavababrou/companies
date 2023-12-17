@@ -3,6 +3,7 @@ import authReducer from "./authSlice";
 import modalReducer from "./modalSlice";
 import companyReducer from "./companySlice";
 import userReducer from "./userSlice";
+import requestsReducer from "./requestsSlice";
 
 const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ const store = configureStore({
     modal: modalReducer,
     company: companyReducer,
     user: userReducer,
+    requests: requestsReducer,
   },
 });
 

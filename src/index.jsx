@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import ReactDOM from "react-dom/client";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Home from "./components/Home/Home";
@@ -9,6 +9,8 @@ import { Provider } from "react-redux";
 import store from "./store/store";
 import PrivateRoute from "./private/PrivateRoute/PrivateRoute";
 import Profile from "./pages/Profile/Profile";
+import AdminsRequests from "./pages/AdminsRequests/AdminsRequests";
+import { autoLoginUser } from "./store/authSlice";
 
 const router = createBrowserRouter([
   {
@@ -31,11 +33,24 @@ const router = createBrowserRouter([
     path: "/profile",
     element: <PrivateRoute element={<Profile />} />,
   },
+  {
+    path: "/requests",
+    element: <PrivateRoute element={<AdminsRequests />} />,
+  },
 ]);
+
+const App = () => {
+  useEffect(() => {
+    store.dispatch(autoLoginUser());
+  }, []);
+
+  return <RouterProvider router={router}></RouterProvider>;
+};
+
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <Provider store={store}>
-      <RouterProvider router={router} />
+      <App></App>
     </Provider>
   </React.StrictMode>
 );

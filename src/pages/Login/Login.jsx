@@ -9,8 +9,8 @@ const Login = (props) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const handleLogin = (formData) => {
-    dispatch(loginUser(formData));
+  const handleLogin = async (formData) => {
+    await dispatch(loginUser(formData));
     navigate("/");
   };
 

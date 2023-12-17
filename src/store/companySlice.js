@@ -51,6 +51,22 @@ export const addReviev = createAsyncThunk(
   }
 );
 
+export const createCompany = createAsyncThunk(
+  "company/createCompany",
+  async (companyInfo) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:3192/api/company",
+        companyInfo
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error creating company:", error);
+      throw error;
+    }
+  }
+);
+
 export const fetchSameCompaniesData = createAsyncThunk(
   "company/fetchSameCompaniesData",
   async (_, thunkAPI) => {
@@ -133,6 +149,16 @@ const companySlice = createSlice({
         state.sameCompaniesData = action.payload;
       })
       .addCase(fetchSameCompaniesData.rejected, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(createCompany.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(createCompany.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.companyData = action.payload;
+      })
+      .addCase(createCompany.rejected, (state) => {
         state.isLoading = false;
       });
   },

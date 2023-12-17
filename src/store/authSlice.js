@@ -1,7 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-// Создаем асинхронное действие (thunk) для процесса входа
 export const loginUser = createAsyncThunk(
   "auth/loginUser",
   async (formData) => {
@@ -10,11 +9,36 @@ export const loginUser = createAsyncThunk(
         "http://localhost:3192/api/user/login",
         formData
       );
-      localStorage.setItem("user", JSON.stringify(response.data));
-      // Важно: возвращайте данные из тела ответа, не весь объект response
+      localStorage.setItem("accessToken", response.data.token);
       return response.data;
     } catch (error) {
-      // Если возникла ошибка, вы можете ее обработать здесь
+      throw error;
+    }
+  }
+);
+
+export const autoLoginUser = createAsyncThunk(
+  "auth/autoLoginUser",
+  async () => {
+    try {
+      const token = localStorage.getItem("accessToken");
+
+      if (!token) {
+        return;
+      }
+
+      const response = await axios.post(
+        "http://localhost:3192/api/user/login",
+        null,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      return response.data;
+    } catch (error) {
       throw error;
     }
   }
@@ -28,7 +52,6 @@ export const updateUser = createAsyncThunk(
         "http://localhost:3192/api/user",
         userData
       );
-
       return response.data;
     } catch (error) {
       throw error;
@@ -69,11 +92,40 @@ const authSlice = createSlice({
       })
       .addCase(updateUser.fulfilled, (state, action) => {
         state.isLoading = false;
+        state.user.user = action.payload;
+      })
+      .addCase(autoLoginUser.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(autoLoginUser.fulfilled, (state, action) => {
+        state.isLoading = false;
         state.user = action.payload;
+        state.isAuthenticated = true;
+      })
+      .addCase(autoLoginUser.rejected, (state) => {
+        state.isLoading = false;
       });
   },
 });
 
+const getRoleString = (roleId) => {
+  switch (roleId) {
+    case 1:
+      return "user";
+    case 2:
+      return "admin";
+    case 3:
+      return "manager";
+    default:
+      return "Неизвестная роль";
+  }
+};
+
+export const selectUserRoleString = (state) => {
+  const roleId = state.auth?.user?.user?.roleId;
+  return getRoleString(roleId);
+};
+export const selectUserRole = (state) => state.auth.user.user.roleId;
 export const selectIsAuthenticated = (state) => state.auth.isAuthenticated;
 export const { login, logout } = authSlice.actions;
 export default authSlice.reducer;

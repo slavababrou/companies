@@ -1,28 +1,19 @@
-import React, { useState } from "react";
-import { Link, useMatch, useResolvedPath } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { logout, selectIsAuthenticated } from "../../store/authSlice";
+import React from "react";
+import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { selectIsAuthenticated } from "../../store/authSlice";
 import image from "../../images/logo/logo.svg";
 import styles from "./Header.module.css";
+import { selectUserRoleString } from "../../store/authSlice";
 
 const Header = () => {
-  const dispatch = useDispatch();
-  const username = useSelector((state) => state.auth.user?.user?.login);
   const isAuthenticated = useSelector(selectIsAuthenticated);
-
-  const [isMenuVisible, setMenuVisible] = useState(false);
-
-  const handleLogout = (e) => {
-    e.stopPropagation();
-    dispatch(logout());
-  };
-
-  const handleMenuToggle = () => {
-    setMenuVisible(!isMenuVisible);
-  };
+  const roleString = useSelector(selectUserRoleString);
 
   const navs = [
     !isAuthenticated && { href: "/authorization", name: "Регистрация" },
+    isAuthenticated &&
+      roleString === "admin" && { href: "/requests", name: "Запросы" },
     isAuthenticated && { href: "/profile", name: "Профиль" },
   ].filter(Boolean);
 
@@ -71,11 +62,9 @@ const Header = () => {
 };
 
 const CustomLink = ({ to, children, ...props }) => {
-  const resolvedPath = useResolvedPath(to);
-  const isActive = useMatch({ path: resolvedPath.pathname, end: true });
   return (
     <li>
-      <Link to={to} {...props} className={isActive ? `${styles.active}` : ""}>
+      <Link to={to} {...props}>
         {children}
       </Link>
     </li>

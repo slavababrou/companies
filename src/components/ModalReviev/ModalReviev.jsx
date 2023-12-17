@@ -7,8 +7,9 @@ import { useParams } from "react-router-dom";
 import { validateRating, validateTerm } from "./validation";
 import { closeModal } from "../../store/modalSlice";
 import { addReviev } from "../../store/companySlice";
+import { fetchRevievsData } from "../../store/companySlice";
 
-function ModalReviev() {
+function ModalReviev({ list }) {
   const dispatch = useDispatch();
   const { companyId } = useParams();
   const userId = useSelector((state) => state.auth.user?.user?.id);
@@ -30,6 +31,7 @@ function ModalReviev() {
     if (ratingValidation.valid && termValidation.valid) {
       console.log(userId, "aboba");
       await dispatch(addReviev({ revievData: formData }));
+      await dispatch(fetchRevievsData({ companyId, list }));
 
       dispatch(closeModal());
       alert("Комментарий успешно создан!");

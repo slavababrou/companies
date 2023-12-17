@@ -15,9 +15,6 @@
   gap: 10px;
 }
 
-.avatarContainer {
-}
-
 .avatar {
   width: 200px;
   height: 200px;
@@ -40,8 +37,6 @@
   font-size: 24px;
   margin-bottom: 10px;
 }
-.userButtons {
-}
 .userButtons .btn {
   padding: 10px 15px;
   border: 1px solid white;
@@ -60,4 +55,43 @@
   margin-top: 5px;
 }
 
-/* Add more styling as needed */
+.user__edit-form {
+  position: fixed;
+  top: 300px;
+  left: 170px;
+  margin-top: 20px;
+  padding: 10px;
+  border: 1px solid rgb(255, 255, 255);
+
+  display: flex;
+  flex-flow: column wrap;
+  justify-content: space-between;
+  gap: 30px;
+}
+.user__edit-form h2 {
+  align-self: center;
+}
+
+.user__edit-form_fields {
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 10px;
+}
+.user__edit-form_fields label {
+  color: #4ae0c2;
+  text-shadow: 0 0 2px black;
+}
+
+.user__edit-form_buttons {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+}
+
+.edit-form_buttons_accept {
+  color: #befff2;
+}
+.edit-form_buttons_decline {
+  color: rgb(255, 127, 95);
+  text-shadow: 0 0 2px black;
+}

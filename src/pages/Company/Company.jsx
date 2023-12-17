@@ -14,7 +14,6 @@ import styles from "./Company.module.css";
 import logo from "../../images/logo/logo.svg";
 import userLogo from "../../images/user.png";
 import ModalReviev from "../../components/ModalReviev/ModalReviev";
-import Rating from "../../components/Raiting/Raiting";
 import Pagination from "../../components/Pagination/Pagination";
 import { selectUserById } from "../../store/userSlice.js";
 //import { selectRevievsDataFromStore } from "../../store/companySlice.js";
@@ -44,11 +43,7 @@ const Company = () => {
       try {
         await dispatch(fetchCompanyData(companyId));
         await dispatch(fetchSameCompaniesData());
-
-        const revievsDataAction = dispatch(
-          fetchRevievsData({ companyId, list })
-        );
-        await revievsDataAction.unwrap();
+        await dispatch(fetchRevievsData({ companyId, list }));
 
         //const revievsData = selectRevievsDataFromStore();
 
@@ -81,21 +76,19 @@ const Company = () => {
                     <b className={styles.bold}>{companyData?.name} </b>отзывы
                   </h3>
                   <span>{companyData?.type}</span>
-                  <span>
-                    {companyData?.raiting}
-                    <Rating value={4} />
-                  </span>
+                  <span>{companyData?.raiting || 0}</span>
                 </div>
               </div>
-              <div className={styles["comments"]}>
+              {/* <div className={styles["comments"]}>
                 <span className={styles["comments_raiting"]}>
-                  {companyData?.raiting}
-                  <Rating value={4} />
+                  rating:
+                  {companyData?.raiting || 0}
                 </span>
                 <span className={styles["comments_count"]}>
+                  revievs:
                   {revievsData?.count}
                 </span>
-              </div>
+              </div> */}
             </div>
             <div className={styles["wrapper__toggle"]}>
               <span className={styles["toggle_comments"]}>
@@ -144,7 +137,7 @@ const Company = () => {
                   >
                     Оставить отзыв
                   </button>
-                  {isModalActive && <ModalReviev />}
+                  {isModalActive && <ModalReviev list={list} />}
                 </div>
 
                 <div className={styles["bar"]}>
@@ -181,7 +174,9 @@ const Company = () => {
               </div>
             </div>
             <div className={styles.pagination}>
-              <Pagination onSetList={handlerSetList} currentList={list} />
+              {revievsData?.count > 4 && (
+                <Pagination onSetList={handlerSetList} currentList={list} />
+              )}
             </div>
           </div>
           <Footer />

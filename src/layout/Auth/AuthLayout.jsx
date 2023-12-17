@@ -22,7 +22,7 @@ const AuthLayout = () => {
         </Link>
       </div>
       <div className={styles["content"]}>
-        {authToggle ? (
+        {!authToggle ? (
           <Login authToggleHandler={authToggleHandler} />
         ) : (
           <RegistrationForm authToggleHandler={authToggleHandler} />
