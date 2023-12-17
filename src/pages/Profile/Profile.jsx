@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { logout, updateUser, changePassword } from "../../store/authSlice";
 import { useNavigate } from "react-router-dom";
@@ -33,6 +33,14 @@ const Profile = () => {
     localStorage.removeItem("accessToken");
     navigate("/authorization");
   };
+
+  useEffect(() => {
+    setEditedUserData({
+      login: user?.login,
+      email: user?.email,
+      id: user?.id,
+    });
+  }, [user]);
 
   const getRoleName = (roleId) => {
     switch (roleId) {
