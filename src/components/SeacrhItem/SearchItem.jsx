@@ -13,7 +13,7 @@ function SearchItem({ company, ...props }) {
             {company.type}
           </span>
           <span className={styles["Search-Item__info_rating"]}>
-            {company.raiting}
+            rating: {company.raiting || 0}
           </span>
         </div>
       </div>

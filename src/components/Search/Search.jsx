@@ -19,9 +19,9 @@ function Search({ placeholder, className, inputClassName, ...props }) {
       console.error("Error fetching data:", error);
     }
   };
-  useEffect(() => {
-    handleSearch();
-  }, []);
+  // useEffect(() => {
+  //   handleSearch();
+  // }, []);
 
   useEffect(() => {
     if (searchText.trim())
@@ -46,6 +46,7 @@ function Search({ placeholder, className, inputClassName, ...props }) {
             e.preventDefault();
             setSearchText(e.target.value);
           }}
+          onFocus={handleSearch}
           className={cn(styles.search, inputClassName)}
           placeholder={placeholder}
           {...props}
@@ -56,14 +57,23 @@ function Search({ placeholder, className, inputClassName, ...props }) {
         </div>
       </div>
       <div className={styles["seacrh-items__wrappeer"]}>
-        {searchResults.map((company) => {
-          const linkTo = `/company/${company.id}`;
-          return (
-            <Link key={company.id} to={linkTo}>
-              <SearchItem company={company} />
-            </Link>
-          );
-        })}
+        {searchText
+          ? searchResults.slice(0, 3).map((company) => {
+              const linkTo = `/company/${company.id}`;
+              return (
+                <Link key={company.id} to={linkTo}>
+                  <SearchItem company={company} />
+                </Link>
+              );
+            })
+          : companies.slice(0, 3).map((company) => {
+              const linkTo = `/company/${company.id}`;
+              return (
+                <Link key={company.id} to={linkTo}>
+                  <SearchItem company={company} />
+                </Link>
+              );
+            })}
       </div>
     </>
   );
