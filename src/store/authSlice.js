@@ -59,6 +59,26 @@ export const updateUser = createAsyncThunk(
   }
 );
 
+export const changePassword = createAsyncThunk(
+  "auth/changePassword",
+  async ({ userId, oldPassword, newPassword }) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:3192/api/user/change-password",
+        { userId, oldPassword, newPassword }
+      );
+
+      if (response.data.error) {
+        throw new Error(response.data.error);
+      }
+
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+);
+
 const authSlice = createSlice({
   name: "auth",
   initialState: {

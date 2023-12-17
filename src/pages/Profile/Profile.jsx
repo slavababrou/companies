@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { logout, updateUser } from "../../store/authSlice";
+import { logout, updateUser, changePassword } from "../../store/authSlice";
 import { useNavigate } from "react-router-dom";
 import Header from "../../components/Header/Header";
 import styles from "./Profile.module.css";
@@ -9,17 +9,18 @@ const Profile = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector((state) => state.auth?.user?.user);
-  console.log("User from Redux store:", user);
 
   const [isEditing, setIsEditing] = useState(false);
+  const [isChangingPassword, setIsChangingPassword] = useState(false);
 
   const [editedUserData, setEditedUserData] = useState({
     login: user?.login,
     email: user?.email,
     id: user?.id,
-    password: user?.password,
-    user_avatar: user?.user_avatar,
   });
+
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
 
   const handleLogout = () => {
     const confirmLogout = window.confirm("Вы уверены, что хотите выйти?");
@@ -54,6 +55,15 @@ const Profile = () => {
     }));
   };
 
+  const handlePasswordChange = (e) => {
+    const { name, value } = e.target;
+    if (name === "oldPassword") {
+      setOldPassword(value);
+    } else if (name === "newPassword") {
+      setNewPassword(value);
+    }
+  };
+
   const handleSubmitForm = async (e) => {
     e.preventDefault();
 
@@ -63,6 +73,30 @@ const Profile = () => {
     alert("Информация успешно изменена!");
 
     setIsEditing(false);
+  };
+
+  const handleChangePassword = async () => {
+    try {
+      const result = await dispatch(
+        changePassword({
+          userId: editedUserData.id,
+          oldPassword: oldPassword,
+          newPassword: newPassword,
+        })
+      );
+      console.log(result);
+
+      if (result.error) {
+        throw new Error("Неверный старый пароль");
+      }
+
+      setOldPassword("");
+      setNewPassword("");
+      setIsChangingPassword(false);
+      alert("Пароль успешно изменен!");
+    } catch (error) {
+      alert(error);
+    }
   };
 
   return (
@@ -81,15 +115,14 @@ const Profile = () => {
         </div>
         <div className={styles.userButtons}>
           {isEditing ? (
-            // Форма редактирования
             <form
               className={styles["user__edit-form"]}
               onSubmit={handleSubmitForm}
             >
-              <h2>Редактирование пользователя</h2>
+              <h2>Редактировать</h2>
               <div className={styles["user__edit-form_fields"]}>
                 <div>
-                  <label htmlFor='login'>Новый логин: </label>
+                  <label htmlFor='login'>Логин: </label>
                   <input
                     type='text'
                     id='login'
@@ -99,7 +132,7 @@ const Profile = () => {
                   />
                 </div>
                 <div>
-                  <label htmlFor='email'>Новый email: </label>
+                  <label htmlFor='email'>Email: </label>
                   <input
                     type='text'
                     id='email'
@@ -127,10 +160,76 @@ const Profile = () => {
               </div>
             </form>
           ) : (
-            <button className={styles.btn} onClick={() => setIsEditing(true)}>
+            <button
+              className={styles.btn}
+              onClick={() => {
+                setIsEditing(true);
+                setIsChangingPassword(false);
+              }}
+            >
               Редактировать
             </button>
           )}
+
+          {isChangingPassword ? (
+            <form className={styles["user__edit-form"]}>
+              <h2>Изменить пароль</h2>
+              <div className={styles["user__edit-form_fields"]}>
+                <div>
+                  <label htmlFor='oldPassword'>Старый пароль: </label>
+                  <input
+                    type='password'
+                    id='oldPassword'
+                    name='oldPassword'
+                    value={oldPassword}
+                    onChange={handlePasswordChange}
+                  />
+                </div>
+                <div>
+                  <label htmlFor='newPassword'>Новый пароль: </label>
+                  <input
+                    type='password'
+                    id='newPassword'
+                    name='newPassword'
+                    value={newPassword}
+                    onChange={handlePasswordChange}
+                  />
+                </div>
+              </div>
+
+              <div className={styles["user__edit-form_buttons"]}>
+                <button
+                  className={styles["edit-form_buttons_accept"]}
+                  onClick={handleChangePassword}
+                  type='button'
+                >
+                  Подтвердить
+                </button>
+                <button
+                  className={styles["edit-form_buttons_decline"]}
+                  onClick={() => {
+                    setOldPassword("");
+                    setNewPassword("");
+                    setIsChangingPassword(false);
+                  }}
+                  type='button'
+                >
+                  Отмена
+                </button>
+              </div>
+            </form>
+          ) : (
+            <button
+              className={styles.btn}
+              onClick={() => {
+                setIsChangingPassword(true);
+                setIsEditing(false);
+              }}
+            >
+              Изменить пароль
+            </button>
+          )}
+
           {getRoleName(user?.roleId) === "Manager" && (
             <button className={styles.btn}>Добавить компанию</button>
           )}
