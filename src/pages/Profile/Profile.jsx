@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import ModalCompany from "../../components/ModalCompany/ModalCompany";
 import Header from "../../components/Header/Header";
 import styles from "./Profile.module.css";
+import { addRequest } from "../../store/requestsSlice";
 
 const Profile = () => {
   const dispatch = useDispatch();
@@ -113,6 +114,31 @@ const Profile = () => {
       alert("Пароль успешно изменен!");
     } catch (error) {
       alert(error);
+    }
+  };
+
+  const handleSendDeleteRequest = async (e) => {
+    e.preventDefault();
+    const confirmed = window.confirm("Вы уверены, что хотите удалить аккаунт?");
+
+    if (confirmed) {
+      try {
+        const result = await dispatch(
+          addRequest({
+            type: "user",
+            userId: user.id,
+          })
+        );
+
+        if (addRequest.fulfilled.match(result)) {
+          // Успешно создан запрос
+          alert("Запрос на удаление аккаунта успешно создан!");
+        } else {
+          alert("Не удалось создать запрос. Пожалуйста, попробуйте еще раз.");
+        }
+      } catch (error) {
+        alert("Произошла ошибка. Пожалуйста, попробуйте еще раз.");
+      }
     }
   };
 
@@ -252,6 +278,9 @@ const Profile = () => {
               Добавить компанию
             </button>
           )}
+          <button className={styles.btn} onClick={handleSendDeleteRequest}>
+            Удалить аккаунт
+          </button>
           <button className={styles.btn} onClick={handleLogout}>
             Выйти
           </button>

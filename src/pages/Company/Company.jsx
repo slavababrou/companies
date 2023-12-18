@@ -138,7 +138,7 @@ const Company = () => {
                           <img src={logo} alt='logo' />
                           <div className={styles["list_item_info"]}>
                             <h5>{company?.name}</h5>
-                            <span>Рейтинг: {company?.raiting}</span>
+                            <span>Рейтинг: {company?.raiting || 0}</span>
                           </div>
                         </Link>
                       );

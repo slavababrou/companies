@@ -139,7 +139,9 @@ const AdminsRequests = () => {
           </section>
         )}
         {userRequests.length === 0 && companyRequests.length === 0 && (
-          <h1 className={styles["admins-requests_no-requests"]}>Нет запросов</h1>
+          <h1 className={styles["admins-requests_no-requests"]}>
+            Нет запросов
+          </h1>
         )}
       </main>
     </div>
