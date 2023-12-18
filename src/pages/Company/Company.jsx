@@ -27,7 +27,6 @@ const Company = () => {
   const sameCompaniesData = useSelector(
     (state) => state.company.sameCompaniesData
   );
-  //const isLoading = useSelector((state) => state.company.isLoading);
 
   let [list, setList] = useState(1);
 
@@ -55,7 +54,7 @@ const Company = () => {
     };
 
     fetchData();
-  }, [companyId, list, dispatch]);
+  }, [companyId, isModalActive, list, dispatch]);
 
   return (
     <>
@@ -94,16 +93,19 @@ const Company = () => {
                     : "Нет отзывов"}
                 </h3>
                 <div className={styles["comments__list"]}>
-                  {revievsData?.rows?.map((reviev) => {
-                    const user = selectUserById(users, reviev.userId);
-                    return (
-                      <CompanyRevievItem
-                        key={reviev.id}
-                        reviev={reviev}
-                        user={user}
-                      />
-                    );
-                  })}
+                  {revievsData?.rows
+                    ?.slice() // Создаем копию массива перед сортировкой
+                    .sort((a, b) => b.id - a.id) // Сортировка по айди
+                    .map((reviev) => {
+                      const user = selectUserById(users, reviev.userId);
+                      return (
+                        <CompanyRevievItem
+                          key={reviev.id}
+                          reviev={reviev}
+                          user={user}
+                        />
+                      );
+                    })}
                 </div>
               </div>
               <div className={styles["bar__container"]}>
@@ -155,7 +157,7 @@ const Company = () => {
                 <Pagination
                   onSetList={handlerSetList}
                   currentList={list}
-                  totalLists={Math.ceil(revievsData.count / 4)}
+                  totalLists={Math.ceil(revievsData?.count / 4)}
                 />
               )}
             </div>

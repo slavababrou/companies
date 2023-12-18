@@ -81,11 +81,11 @@ const NewCommentsList = () => {
           })}
       </div>
 
-      {revievsData.count > 6 && (
+      {revievsData?.count > 6 && (
         <Pagination
           onSetList={handlerSetList}
           currentList={list}
-          totalLists={Math.ceil(revievsData.count / 6)}
+          totalLists={Math.ceil(revievsData?.count / 6)}
         />
       )}
     </div>
