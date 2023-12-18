@@ -47,7 +47,7 @@
   display: flex;
   gap: 20px;
 }
-.list_item_likes img {
+.list_item_likes svg {
   background: white;
   width: 20px;
   height: auto;
@@ -67,4 +67,13 @@
   display: inline-block;
   text-align: center;
   min-width: 20px;
+}
+.alredy-liked span,
+.alredy-disliked span {
+  color: rgb(47, 47, 255) !important;
+}
+
+.alredy-liked svg,
+.alredy-disliked svg {
+  stroke: rgba(53, 53, 255, 0.333);
 }

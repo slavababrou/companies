@@ -198,6 +198,23 @@ const companySlice = createSlice({
   },
 });
 
+//для получения сос-ия лайка(этот ли юзер лайкнул/дизлайкнул)
+export const checkUserLikedDisliked = createAsyncThunk(
+  "company/checkUserLikedDisliked",
+  async ({ userId, revievId }) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:3192/api/like/check-user-liked-disliked",
+        { userId, revievId }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error checking user liked or disliked:", error);
+      throw error;
+    }
+  }
+);
+
 export const selectRevievsDataFromStore = (state) => {
   return state?.company?.revievsData;
 };
