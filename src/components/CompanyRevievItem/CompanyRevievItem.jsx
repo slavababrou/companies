@@ -4,6 +4,8 @@ import logo from "../../images/logo/logo.svg";
 import TimeAgo from "../TimeAgo/TimeAgo";
 import { useDispatch } from "react-redux";
 import { addLikeDislikeReviev } from "../../store/companySlice";
+import like from "./images/like.svg";
+import dislike from "./images/dislike.svg";
 
 const ReviewItem = ({ reviev, user }) => {
   const dispatch = useDispatch();
@@ -33,13 +35,14 @@ const ReviewItem = ({ reviev, user }) => {
       <span className={styles["list_item_text"]}>{reviev.text}</span>
       <div className={styles["list_item_likes"]}>
         <button className={styles["likes"]} onClick={() => addLike(reviev.id)}>
-          Лайки: {reviev.likes}
+          <img src={like} alt='' /> <span>{reviev.likes}</span>
         </button>
         <button
           className={styles["dislikes"]}
           onClick={() => addDislike(reviev.id)}
         >
-          Дизлайки: {reviev.dislikes}
+          <img src={dislike} alt='' />
+          <span>{reviev.dislikes}</span>
         </button>
       </div>
     </div>
