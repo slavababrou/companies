@@ -35,7 +35,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/requests",
-    element: <PrivateRoute element={<AdminsRequests />} />,
+    element: <PrivateRoute element={<AdminsRequests />} requiredRole={2} />,
   },
 ]);
 

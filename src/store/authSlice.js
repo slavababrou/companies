@@ -3,13 +3,15 @@ import axios from "axios";
 
 export const loginUser = createAsyncThunk(
   "auth/loginUser",
-  async (formData) => {
+  async ({ formData, rememberMe }) => {
     try {
       const response = await axios.post(
         "http://localhost:3192/api/user/login",
         formData
       );
-      localStorage.setItem("accessToken", response.data.token);
+
+      if (rememberMe) localStorage.setItem("accessToken", response.data.token);
+
       return response.data;
     } catch (error) {
       throw error;
@@ -93,6 +95,7 @@ const authSlice = createSlice({
       state.isLoading = false;
     },
     logout: (state) => {
+      localStorage.removeItem("accessToken");
       state.isAuthenticated = false;
       state.user = null;
     },

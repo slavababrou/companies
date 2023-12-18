@@ -45,9 +45,16 @@
 
 .links {
   display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
   font-size: 14px;
 }
-.links span {
+.links_no-acc {
+  display: flex;
+  flex-flow: row nowrap;
+}
+.links span,
+.links label {
   color: rgba(168, 255, 238, 0.815);
 }
 .links a {

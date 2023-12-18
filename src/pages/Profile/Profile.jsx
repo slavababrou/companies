@@ -40,7 +40,6 @@ const Profile = () => {
     }
 
     dispatch(logout());
-    localStorage.removeItem("accessToken");
     navigate("/authorization");
   };
 
