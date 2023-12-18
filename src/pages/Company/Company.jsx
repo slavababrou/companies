@@ -152,7 +152,11 @@ const Company = () => {
             </div>
             <div className={styles.pagination}>
               {revievsData?.count > 4 && (
-                <Pagination onSetList={handlerSetList} currentList={list} />
+                <Pagination
+                  onSetList={handlerSetList}
+                  currentList={list}
+                  totalLists={Math.ceil(revievsData.count / 4)}
+                />
               )}
             </div>
           </div>

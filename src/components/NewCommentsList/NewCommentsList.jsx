@@ -81,7 +81,13 @@ const NewCommentsList = () => {
           })}
       </div>
 
-      <Pagination onSetList={handlerSetList} currentList={list} />
+      {revievsData.count > 6 && (
+        <Pagination
+          onSetList={handlerSetList}
+          currentList={list}
+          totalLists={Math.ceil(revievsData.count / 6)}
+        />
+      )}
     </div>
   );
 };
