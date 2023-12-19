@@ -1,30 +1,46 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-export const fetchAllRequests = () => async (dispatch) => {
-  try {
-    const response = await axios.get("http://localhost:3192/api/requests");
-    const allRequests = response.data;
+export const fetchAllRequests = createAsyncThunk(
+  "requests/fetchAllRequests",
+  async (_, thunkAPI) => {
+    try {
+      const state = thunkAPI.getState();
+      const token = state.auth?.user?.token;
 
-    const companyRequests = allRequests.rows.filter(
-      (request) => request.type === "company"
-    );
-    const userRequests = allRequests.rows.filter(
-      (request) => request.type === "user"
-    );
+      const response = await axios.get("http://localhost:3192/api/requests", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const allRequests = response.data;
 
-    dispatch(setCompanyRequests(companyRequests));
-    dispatch(setUserRequests(userRequests));
-  } catch (error) {
-    console.error("Ошибка при загрузке запросов:", error);
+      const companyRequests = allRequests.rows.filter(
+        (request) => request.type === "company"
+      );
+      const userRequests = allRequests.rows.filter(
+        (request) => request.type === "user"
+      );
+
+      thunkAPI.dispatch(setCompanyRequests(companyRequests));
+      thunkAPI.dispatch(setUserRequests(userRequests));
+    } catch (error) {
+      console.error("Ошибка при загрузке запросов:", error);
+      throw error;
+    }
   }
-};
+);
 
 export const deleteRequest = createAsyncThunk(
   "requests/deleteRequest",
-  async (requestId) => {
+  async (requestId, { getState }) => {
     try {
-      await axios.delete(`http://localhost:3192/api/requests/${requestId}`);
+      const token = getState().auth?.user?.token;
+      await axios.delete(`http://localhost:3192/api/requests/${requestId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       return requestId;
     } catch (error) {
       throw error;
@@ -33,13 +49,22 @@ export const deleteRequest = createAsyncThunk(
 );
 export const addRequest = createAsyncThunk(
   "requests/addCompanyRequest",
-  async ({ type, userId, companyInfo }) => {
+  async ({ type, userId, companyInfo }, { getState }) => {
     try {
-      const response = await axios.post("http://localhost:3192/api/requests", {
-        type,
-        userId,
-        companyInfo,
-      });
+      const token = getState().auth?.user?.token;
+      const response = await axios.post(
+        "http://localhost:3192/api/requests",
+        {
+          type,
+          userId,
+          companyInfo,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       return response.data;
     } catch (error) {
       throw error;

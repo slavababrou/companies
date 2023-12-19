@@ -9,3 +9,9 @@ export const validatePassword = (password) => {
 export const validateEmail = (email) => {
   return email.includes("@") && email.includes(".");
 };
+
+export const isValidFormData = (login, email, password) => {
+  return (
+    validateLogin(login) && validateEmail(email) && validatePassword(password)
+  );
+};

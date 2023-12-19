@@ -4,10 +4,16 @@ import axios from "axios";
 
 export const fetchCompanyData = createAsyncThunk(
   "company/fetchCompanyData",
-  async (companyId) => {
+  async (companyId, { getState }) => {
     try {
+      const token = getState().auth?.user?.token;
       const response = await axios.get(
-        `http://localhost:3192/api/company/${companyId}`
+        `http://localhost:3192/api/company/${companyId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       return response.data;
     } catch (error) {
@@ -17,15 +23,40 @@ export const fetchCompanyData = createAsyncThunk(
   }
 );
 
+//добавить лимит
+export const fetchAllCompaniesData = createAsyncThunk(
+  "company/fetchAllCompaniesData",
+  async (_, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth?.user?.token;
+      const response = await axios.get("http://localhost:3192/api/company", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching all companies data:", error);
+      throw error;
+    }
+  }
+);
+
 export const fetchRevievsData = createAsyncThunk(
   "company/fetchRevievsData",
-  async ({ companyId, list }) => {
+  async ({ companyId, list }, { getState }) => {
     const apiUrl = companyId
       ? `http://localhost:3192/api/reviev?companyId=${companyId}&limit=4&page=${list}`
       : `http://localhost:3192/api/reviev?limit=6&page=${list}`;
 
     try {
-      const response = await axios.get(apiUrl);
+      const token = getState().auth?.user?.token;
+
+      const response = await axios.get(apiUrl, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       return response.data;
     } catch (error) {
       console.error("Error fetching revievs data:", error);
@@ -36,11 +67,17 @@ export const fetchRevievsData = createAsyncThunk(
 
 export const addReviev = createAsyncThunk(
   "company/addReviev",
-  async ({ revievData }) => {
+  async ({ revievData }, { getState }) => {
     try {
+      const token = getState().auth?.user?.token;
       const response = await axios.post(
         `http://localhost:3192/api/reviev`,
-        revievData
+        revievData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
 
       return response.data;
@@ -53,11 +90,17 @@ export const addReviev = createAsyncThunk(
 
 export const createCompany = createAsyncThunk(
   "company/createCompany",
-  async (companyInfo) => {
+  async (companyInfo, { getState }) => {
     try {
+      const token = getState().auth?.user?.token;
       const response = await axios.post(
         "http://localhost:3192/api/company",
-        companyInfo
+        companyInfo,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       return response.data;
     } catch (error) {
@@ -67,22 +110,28 @@ export const createCompany = createAsyncThunk(
   }
 );
 
+//Добавить лимит в 5шт
 export const fetchSameCompaniesData = createAsyncThunk(
   "company/fetchSameCompaniesData",
   async (_, thunkAPI) => {
     try {
       const { companyData } = thunkAPI.getState().company;
+      const token = thunkAPI.getState().auth?.user?.token;
 
       if (!companyData) {
-        console.error("Company data is not available");
         throw new Error("Company data is not available");
       }
 
-      const type = companyData.type;
-      const id = companyData.id;
+      const type = companyData?.type;
+      const id = companyData?.id;
 
       const response = await axios.get(
-        `http://localhost:3192/api/company?type=${type}`
+        `http://localhost:3192/api/company?type=${type}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
 
       const filteredCompanies = response.data.rows.filter(
@@ -103,6 +152,7 @@ export const addLikeDislikeReviev = createAsyncThunk(
   async ({ revievId, actionType }, { getState }) => {
     try {
       const userId = getState().auth.user?.user?.id;
+      const token = getState().auth?.user?.token;
 
       if (
         actionType === "like" ||
@@ -110,7 +160,12 @@ export const addLikeDislikeReviev = createAsyncThunk(
       ) {
         const response = await axios.post(
           `http://localhost:3192/api/reviev/add-like-dislike`,
-          { id: revievId, actionType, userId }
+          { id: revievId, actionType, userId },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
 
         return response.data;
@@ -121,12 +176,35 @@ export const addLikeDislikeReviev = createAsyncThunk(
     }
   }
 );
+//для получения сос-ия лайка(этот ли юзер лайкнул/дизлайкнул)
+export const checkUserLikedDisliked = createAsyncThunk(
+  "company/checkUserLikedDisliked",
+  async ({ userId, revievId }, { getState }) => {
+    try {
+      const token = getState().auth?.user?.token;
+      const response = await axios.post(
+        "http://localhost:3192/api/like/check-user-liked-disliked",
+        { userId, revievId },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error checking user liked or disliked:", error);
+      throw error;
+    }
+  }
+);
 
 const companySlice = createSlice({
   name: "company",
   initialState: {
     companyData: null,
     revievsData: null,
+    allCompaniesData: null,
     sameCompaniesData: null,
     isLoading: false,
   },
@@ -184,6 +262,10 @@ const companySlice = createSlice({
       .addCase(createCompany.rejected, (state) => {
         state.isLoading = false;
       })
+      .addCase(fetchAllCompaniesData.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.allCompaniesData = action.payload;
+      })
       .addCase(addLikeDislikeReviev.fulfilled, (state, action) => {
         state.isLoading = false;
 
@@ -198,25 +280,12 @@ const companySlice = createSlice({
   },
 });
 
-//для получения сос-ия лайка(этот ли юзер лайкнул/дизлайкнул)
-export const checkUserLikedDisliked = createAsyncThunk(
-  "company/checkUserLikedDisliked",
-  async ({ userId, revievId }) => {
-    try {
-      const response = await axios.post(
-        "http://localhost:3192/api/like/check-user-liked-disliked",
-        { userId, revievId }
-      );
-      return response.data;
-    } catch (error) {
-      console.error("Error checking user liked or disliked:", error);
-      throw error;
-    }
-  }
-);
-
 export const selectRevievsDataFromStore = (state) => {
   return state?.company?.revievsData;
+};
+
+export const selectAllCompaniesDataFromStore = (state) => {
+  return state?.company?.allCompaniesData?.rows;
 };
 
 export default companySlice.reducer;

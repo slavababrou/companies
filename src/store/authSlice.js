@@ -48,11 +48,18 @@ export const autoLoginUser = createAsyncThunk(
 
 export const updateUser = createAsyncThunk(
   "auth/updateUser",
-  async (userData) => {
+  async (userData, { getState }) => {
     try {
+      const token = getState().auth?.user?.token;
+
       const response = await axios.put(
         "http://localhost:3192/api/user",
-        userData
+        userData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       return response.data;
     } catch (error) {
@@ -63,11 +70,18 @@ export const updateUser = createAsyncThunk(
 
 export const changePassword = createAsyncThunk(
   "auth/changePassword",
-  async ({ userId, oldPassword, newPassword }) => {
+  async ({ userId, oldPassword, newPassword }, { getState }) => {
     try {
+      const token = getState().auth?.user?.token;
+
       const response = await axios.post(
         "http://localhost:3192/api/user/change-password",
-        { userId, oldPassword, newPassword }
+        { userId, oldPassword, newPassword },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
 
       if (response.data.error) {
@@ -75,6 +89,18 @@ export const changePassword = createAsyncThunk(
       }
 
       return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+);
+
+export const registerUser = createAsyncThunk(
+  "auth/registerUser",
+  async (formData) => {
+    try {
+      await axios.post("http://localhost:3192/api/user/register", formData);
+      return { success: true };
     } catch (error) {
       throw error;
     }

@@ -31,9 +31,24 @@
 .icon {
   width: 22px;
 }
-.seacrh-items__wrappeer {
+.search-items__wrapper {
   display: flex;
   flex-flow: column nowrap;
-  overflow-y: auto;
+  overflow-y: scroll;
   max-height: 200px;
+  width: 50%;
+  margin: 0 auto;
+  padding-right: 5px;
+}
+
+.search-items__wrapper::-webkit-scrollbar {
+  width: 6px; /* Ширина полосы прокрутки */
+}
+.search-items__wrapper::-webkit-scrollbar-thumb {
+  background-color: #3498db9a; /* Цвет "ползунка" полосы прокрутки */
+  border-radius: 5px; /* Радиус закругления "ползунка" */
+}
+
+.search-items__wrapper::-webkit-scrollbar-track {
+  background-color: #f1f1f133; /* Цвет фона полосы прокрутки */
 }

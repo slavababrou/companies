@@ -5,7 +5,7 @@ export const fetchUserById = createAsyncThunk(
   "user/fetchUserById",
   async (userId, { getState }) => {
     try {
-      const token = getState().auth.user?.token;
+      const token = getState().auth?.user?.token;
       if (!token) {
         throw new Error("Токен недоступен");
       }
@@ -27,9 +27,15 @@ export const fetchUserById = createAsyncThunk(
 
 export const fetchUsersByIds = createAsyncThunk(
   "user/fetchUsersByIds",
-  async (userIds) => {
+  async (userIds, { getState }) => {
     try {
-      const response = await axios.get("http://localhost:3192/api/user");
+      const token = getState().auth?.user?.token;
+
+      const response = await axios.get("http://localhost:3192/api/user", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       return response.data.filter((item) => userIds.includes(item.id));
     } catch (error) {
       throw error;
@@ -39,9 +45,14 @@ export const fetchUsersByIds = createAsyncThunk(
 
 export const deleteUser = createAsyncThunk(
   "requests/deleteUser",
-  async (userId) => {
+  async (userId, { getState }) => {
     try {
-      await axios.delete(`http://localhost:3192/api/user/${userId}`);
+      const token = getState().auth?.user?.token;
+      await axios.delete(`http://localhost:3192/api/user/${userId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       return userId;
     } catch (error) {
       throw error;

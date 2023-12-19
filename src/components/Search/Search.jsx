@@ -3,21 +3,26 @@ import styles from "./Search.module.css";
 import cn from "classnames";
 import image from "../../images/search.svg";
 import SearchItem from "../SeacrhItem/SearchItem";
-import axios from "axios";
 import { Link } from "react-router-dom";
+import {
+  fetchAllCompaniesData,
+  selectAllCompaniesDataFromStore,
+} from "../../store/companySlice";
+import { useDispatch, useSelector } from "react-redux";
 
 function Search({ placeholder, className, inputClassName, ...props }) {
+  const dispatch = useDispatch();
+  const allCompaniesData = useSelector(selectAllCompaniesDataFromStore);
+
   const [searchText, setSearchText] = useState("");
   const [searchResults, setSearchResults] = useState([]);
-  const [companies, setCompanies] = useState([]);
   const [isSearchResultsVisible, setIsSearchResultsVisible] = useState(false);
 
   const searchContainerRef = useRef(null);
 
   const handleSearch = async () => {
     try {
-      const response = await axios.get(`http://localhost:3192/api/company`);
-      setCompanies(response.data.rows);
+      await dispatch(fetchAllCompaniesData());
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -26,16 +31,15 @@ function Search({ placeholder, className, inputClassName, ...props }) {
   useEffect(() => {
     if (searchText.trim()) {
       setSearchResults(
-        companies.filter((company) =>
+        allCompaniesData.filter((company) =>
           company.name.toLowerCase().startsWith(searchText.toLowerCase())
         )
       );
       setIsSearchResultsVisible(true);
     } else {
       setSearchResults([]);
-      //setIsSearchResultsVisible(false);
     }
-  }, [searchText, companies]);
+  }, [searchText, allCompaniesData]);
 
   useEffect(() => {
     document.addEventListener("click", handleClickOutside);
@@ -74,18 +78,22 @@ function Search({ placeholder, className, inputClassName, ...props }) {
         </div>
       </div>
       {isSearchResultsVisible && (
-        <div className={styles["seacrh-items__wrappeer"]}>
-          {searchText
-            ? searchResults.slice(0, 3).map((company) => (
-                <Link key={company.id} to={`/company/${company.id}`}>
-                  <SearchItem company={company} />
-                </Link>
-              ))
-            : companies.slice(0, 3).map((company) => (
-                <Link key={company.id} to={`/company/${company.id}`}>
-                  <SearchItem company={company} />
-                </Link>
-              ))}
+        <div className={styles["search-items__wrapper"]}>
+          {searchText ? (
+            searchResults.slice(0, 3).map((company) => (
+              <Link key={company.id} to={`/company/${company.id}`}>
+                <SearchItem company={company} />
+              </Link>
+            ))
+          ) : allCompaniesData ? (
+            allCompaniesData.map((company) => (
+              <Link key={company.id} to={`/company/${company.id}`}>
+                <SearchItem company={company} />
+              </Link>
+            ))
+          ) : (
+            <></>
+          )}
         </div>
       )}
     </>

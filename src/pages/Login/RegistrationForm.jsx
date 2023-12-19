@@ -1,14 +1,17 @@
 import Button from "../../components/Button/Button";
 import Input from "../../components/Input/Input";
 import styles from "./RegistrationForm.module.css";
-import axios from "axios";
-import { validateLogin, validateEmail, validatePassword } from "./validation";
+import { isValidFormData } from "./validation";
+import { useDispatch } from "react-redux";
+import { registerUser } from "../../store/authSlice";
 
 const RegistrationForm = (props) => {
+  const dispatch = useDispatch();
+
   const register = async (formData) => {
     try {
-      await axios.post("http://localhost:3192/api/user/register", formData);
-      alert("Акканут успешно создан!");
+      await dispatch(registerUser(formData));
+      alert("Аккаунт успешно создан!");
       props.authToggleHandler();
       return 0;
     } catch (error) {
@@ -24,22 +27,8 @@ const RegistrationForm = (props) => {
 
     const { login, email, password } = Object.fromEntries(formData.entries());
 
-    if (!validateLogin(login)) {
-      console.error(
-        "Invalid login. Login should be between 3 and 20 characters."
-      );
-      return;
-    }
-
-    if (!validatePassword(password)) {
-      console.error(
-        "Invalid password length. Password should be at least 8 characters long."
-      );
-      return;
-    }
-
-    if (!validateEmail(email)) {
-      console.error("Invalid email address. (should be with @ and '.')");
+    if (!isValidFormData(login, email, password)) {
+      alert("Invalid form data.");
       return;
     }
 

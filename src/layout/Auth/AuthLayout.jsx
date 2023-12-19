@@ -2,17 +2,12 @@ import styles from "./AuthLayout.module.css";
 import image from "../../images/logo/logo.svg";
 import Login from "../../pages/Login/Login";
 import RegistrationForm from "../../pages/Login/RegistrationForm";
-import { Link, Navigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useState } from "react";
 
 const AuthLayout = () => {
   const [authToggle, setAuthToggle] = useState(false);
   const authToggleHandler = () => setAuthToggle(!authToggle);
-
-  // const isLoggedIn = localStorage.getItem("token");
-  // if (isLoggedIn) {
-  //   return <Navigate to='/' />;
-  // }
 
   return (
     <div className={styles["layout"]}>
