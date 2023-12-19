@@ -24,6 +24,9 @@ const Company = () => {
   const companyData = useSelector((state) => state.company.companyData);
   const revievsData = useSelector((state) => state.company.revievsData);
 
+  //  authToken только для ререндера при перезагрузке страницы
+  const authToken = useSelector((state) => state.auth.user?.token);
+
   const sameCompaniesData = useSelector(
     (state) => state.company.sameCompaniesData
   );
@@ -54,7 +57,7 @@ const Company = () => {
     };
 
     fetchData();
-  }, [companyId, isModalActive, list, dispatch]);
+  }, [companyId, isModalActive, authToken, list, dispatch]);
 
   return (
     <>

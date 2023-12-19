@@ -1,16 +1,18 @@
 import React, { useEffect } from "react";
 import ReactDOM from "react-dom/client";
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import Home from "./components/Home/Home";
-import Catalog from "./components/Catalog/Catalog";
+
+import Home from "./pages/Home/Home";
+import Catalog from "./pages/Catalog/Catalog";
 import AuthLayout from "./layout/Auth/AuthLayout";
 import Company from "./pages/Company/Company";
-import { Provider } from "react-redux";
 import store from "./store/store";
 import PrivateRoute from "./private/PrivateRoute/PrivateRoute";
 import Profile from "./pages/Profile/Profile";
 import AdminsRequests from "./pages/AdminsRequests/AdminsRequests";
+
 import { autoLoginUser } from "./store/authSlice";
+import { Provider } from "react-redux";
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
 const router = createBrowserRouter([
   {

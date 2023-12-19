@@ -1,4 +1,4 @@
-import Header from "../Header/Header";
+import Header from "../../components/Header/Header";
 import styles from "./Catalog.module.css";
 
 const Catalog = () => {

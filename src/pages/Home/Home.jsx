@@ -1,7 +1,7 @@
-import Footer from "../Footer/Footer";
-import Header from "../Header/Header";
-import NewCommentsList from "../NewCommentsList/NewCommentsList";
-import SearchContent from "../SearchContent/SearchContent";
+import Footer from "../../components/Footer/Footer";
+import Header from "../../components/Header/Header";
+import NewCommentsList from "../../components/HomeRevievsList/HomeRevievsList";
+import SearchContent from "../../components/SearchContent/SearchContent";
 import styles from "./Home.module.css";
 
 const Home = () => {

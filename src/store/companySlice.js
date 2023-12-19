@@ -7,15 +7,17 @@ export const fetchCompanyData = createAsyncThunk(
   async (companyId, { getState }) => {
     try {
       const token = getState().auth?.user?.token;
-      const response = await axios.get(
-        `http://localhost:3192/api/company/${companyId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      return response.data;
+      if (token) {
+        const response = await axios.get(
+          `http://localhost:3192/api/company/${companyId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        return response.data;
+      }
     } catch (error) {
       console.error("Error fetching company data:", error);
       throw error;
@@ -29,12 +31,14 @@ export const fetchAllCompaniesData = createAsyncThunk(
   async (_, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth?.user?.token;
-      const response = await axios.get("http://localhost:3192/api/company", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      return response.data;
+      if (token) {
+        const response = await axios.get("http://localhost:3192/api/company", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        return response.data;
+      }
     } catch (error) {
       console.error("Error fetching all companies data:", error);
       throw error;
@@ -51,13 +55,14 @@ export const fetchRevievsData = createAsyncThunk(
 
     try {
       const token = getState().auth?.user?.token;
-
-      const response = await axios.get(apiUrl, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      return response.data;
+      if (token) {
+        const response = await axios.get(apiUrl, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        return response.data;
+      }
     } catch (error) {
       console.error("Error fetching revievs data:", error);
       throw error;
@@ -70,17 +75,19 @@ export const addReviev = createAsyncThunk(
   async ({ revievData }, { getState }) => {
     try {
       const token = getState().auth?.user?.token;
-      const response = await axios.post(
-        `http://localhost:3192/api/reviev`,
-        revievData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      if (token) {
+        const response = await axios.post(
+          `http://localhost:3192/api/reviev`,
+          revievData,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
-      return response.data;
+        return response.data;
+      }
     } catch (error) {
       console.error("Error adding reviev:", error);
       throw error;
@@ -118,27 +125,25 @@ export const fetchSameCompaniesData = createAsyncThunk(
       const { companyData } = thunkAPI.getState().company;
       const token = thunkAPI.getState().auth?.user?.token;
 
-      if (!companyData) {
-        throw new Error("Company data is not available");
+      if (companyData && token) {
+        const type = companyData?.type;
+        const id = companyData?.id;
+
+        const response = await axios.get(
+          `http://localhost:3192/api/company?type=${type}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        const filteredCompanies = response.data.rows.filter(
+          (company) => company.id !== id
+        );
+
+        return filteredCompanies;
       }
-
-      const type = companyData?.type;
-      const id = companyData?.id;
-
-      const response = await axios.get(
-        `http://localhost:3192/api/company?type=${type}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      const filteredCompanies = response.data.rows.filter(
-        (company) => company.id !== id
-      );
-
-      return filteredCompanies;
     } catch (error) {
       console.error("Error fetching same companies data:", error);
 

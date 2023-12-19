@@ -10,10 +10,15 @@ const RegistrationForm = (props) => {
 
   const register = async (formData) => {
     try {
-      await dispatch(registerUser(formData));
-      alert("Аккаунт успешно создан!");
-      props.authToggleHandler();
-      return 0;
+      const result = await dispatch(registerUser(formData));
+      if (result.payload && result.payload.success) {
+        alert("Аккаунт успешно создан!");
+        props.authToggleHandler();
+        return 0;
+      } else {
+        alert(result.error.message);
+        return 1;
+      }
     } catch (error) {
       alert("Error creating user:", error.message);
       return 1;

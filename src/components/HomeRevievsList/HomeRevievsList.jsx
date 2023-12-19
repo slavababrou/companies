@@ -1,4 +1,4 @@
-import styles from "./NewCommentsList.module.css";
+import styles from "./HomeRevievsList.module.css";
 import companyLogo from "../../images/logo/logo.svg";
 import Pagination from "../Pagination/Pagination";
 import { useEffect, useState } from "react";
@@ -11,6 +11,9 @@ const NewCommentsList = () => {
   const dispatch = useDispatch();
   const users = useSelector((state) => state.user.users);
   const revievsData = useSelector((state) => state.company.revievsData);
+
+  //  authToken только для ререндера при перезагрузке страницы
+  const authToken = useSelector((state) => state.auth.user?.token);
 
   let [list, setList] = useState(1);
 
@@ -27,7 +30,7 @@ const NewCommentsList = () => {
     };
 
     fetchData();
-  }, [list, dispatch]);
+  }, [list, dispatch, authToken]);
 
   // Зависимость от revievsData для выполнения дополнительных действий
   useEffect(() => {

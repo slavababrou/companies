@@ -5,21 +5,29 @@ import styles from "./Login.module.css";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../../store/authSlice";
+import { validatePassword, validateLogin } from "./validation";
 
 const Login = (props) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [rememberMe, setRememberMe] = useState(false);
+  const [rememberMe, setRememberMe] = useState(true);
 
   const handleRememberMeChange = () => {
     setRememberMe(!rememberMe);
   };
 
   const handleLogin = async (formData) => {
-    await dispatch(loginUser({ formData, rememberMe }));
-
-    navigate("/");
+    try {
+      const result = await dispatch(loginUser({ formData, rememberMe }));
+      if (!result?.payload && !result?.payload?.success) {
+        alert(result.error.message);
+        return;
+      }
+      navigate("/");
+    } catch (error) {
+      console.error("Ошибка при входе:", error);
+    }
   };
 
   const submitHandler = (e) => {
@@ -27,8 +35,12 @@ const Login = (props) => {
 
     const form = e.target;
     const formData = new FormData(form);
+    const login = formData.get("username"); // Или что-то подобное в зависимости от вашей формы
+    const password = formData.get("password");
 
-    handleLogin(formData);
+    if (validatePassword(password) && validateLogin(login))
+      handleLogin(formData);
+    else alert("Invalid form data.");
   };
 
   return (

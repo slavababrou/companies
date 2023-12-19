@@ -14,7 +14,7 @@ export const loginUser = createAsyncThunk(
 
       return response.data;
     } catch (error) {
-      throw error;
+      throw error?.response?.data?.info;
     }
   }
 );
@@ -102,7 +102,7 @@ export const registerUser = createAsyncThunk(
       await axios.post("http://localhost:3192/api/user/register", formData);
       return { success: true };
     } catch (error) {
-      throw error;
+      throw error.response.data;
     }
   }
 );
